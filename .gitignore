@@ -1,6 +1,7 @@
 __pycache__/
 .venv/
 misc/
+data/
 build/
 *.pyc
 *.pyo

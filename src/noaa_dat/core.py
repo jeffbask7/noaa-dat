@@ -1,6 +1,7 @@
 import requests
 from datetime import datetime, timedelta, timezone
 from noaa_dat._constants import BASE_URL, OUT_FIELDS, OUT_SR
+import pandas as pd
 
 class Dat:
     def __init__(self, start_time=None, end_time=None, lat_min=None, lat_max=None, lon_min=None, lon_max=None, format_out='geojson'):
@@ -30,7 +31,7 @@ class Dat:
                          "ymax":self.lat_max,
                          "spatialReference":{"wkid":4326}})).replace("'", '"')
         
-    def build_url(self):
+    def build_url(self) -> str:
         params = {
             "where":f"{self.where}",
             "text":"",
@@ -83,9 +84,19 @@ class Dat:
                 url_str = url_str + "&" + param
         return url_str
     
-    def get_dat(self):
+    def get_dat(self) -> dict:
         url_str = Dat.build_url(self)
         print(url_str)
         result = requests.get(url_str)
         contents_json = result.json()
         return contents_json
+    
+    def to_dataframe(self) -> pd.DataFrame:
+        contents_json = Dat.get_dat(self)
+        df = pd.json_normalize(contents_json, record_path='features')
+        df = df.drop('type', axis=1)
+        cols = list(df.columns)
+        newcols = [x.split('.')[1] for x in cols if len(x.split('.')) > 1]
+        cols_rename = dict(zip(cols[1:],newcols))
+        df = df.rename(columns=cols_rename)
+        return df
