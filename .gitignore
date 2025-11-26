@@ -7,3 +7,4 @@ build/
 *.pyo
 *.pyd
 *.egg-info/
+examples/*.ipynb
