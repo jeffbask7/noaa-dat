@@ -104,7 +104,7 @@ class Dat:
         df['surveydate'] = pd.to_datetime(df['surveydate']*1000000)
         return df
     
-    def to_geodataframe(self) -> gpd.Geodataframe:
+    def to_geodataframe(self) -> gpd.GeoDataFrame:
         df = Dat.to_dataframe(self)
         gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(x=df['lon'], y=df['lat']), crs='EPSG:4326')
         return gdf

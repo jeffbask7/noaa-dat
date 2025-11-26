@@ -8,8 +8,8 @@ export_directory = 'data'
 os.makedirs(export_directory, exist_ok=True)
 
 #DEFINE START AND END TIMES AS DATETIME OBJECTS
-start_time = datetime(2025,4,3,0)
-end_time = datetime(2025,4,3,12)
+start_time = datetime(2025,4,4,0)
+end_time = datetime(2025,4,4,12)
 
 #CREATE STRING VERSIONS OF START AND END TIMES FOR USE IN EXPORT FILENAME
 start_time_str = start_time.strftime('%Y-%m-%d-%h')
