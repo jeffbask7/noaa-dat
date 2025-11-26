@@ -2,6 +2,7 @@ import requests
 from datetime import datetime, timedelta, timezone
 from noaa_dat._constants import BASE_URL, OUT_FIELDS, OUT_SR
 import pandas as pd
+import geopandas as gpd
 
 class Dat:
     def __init__(self, start_time=None, end_time=None, lat_min=None, lat_max=None, lon_min=None, lon_max=None, format_out='geojson'):
@@ -99,4 +100,11 @@ class Dat:
         newcols = [x.split('.')[1] for x in cols if len(x.split('.')) > 1]
         cols_rename = dict(zip(cols[1:],newcols))
         df = df.rename(columns=cols_rename)
+        df['stormdate'] = pd.to_datetime(df['stormdate']*1000000)
+        df['surveydate'] = pd.to_datetime(df['surveydate']*1000000)
         return df
+    
+    def to_geodataframe(self) -> gpd.Geodataframe:
+        df = Dat.to_dataframe(self)
+        gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(x=df['lon'], y=df['lat']), crs='EPSG:4326')
+        return gdf
