@@ -34,11 +34,15 @@ dat = Dat( start_time=start_time, end_time=end_time,
 
 #CALL TO_DATAFRAME ON DAT OBJECT TO RETURN RESULTS AS PANDAS DATAFRAME
 print('getting damage points')
-df = dat.to_dataframe()
+gdf = dat.to_geodataframe()
 print('download complete')
-print(df)
+print(gdf)
 
 #SAVE RESULTS TO CSV
-df.to_csv(export_path, index=False)
+gdf.to_csv(export_path, index=False)
+#SAVE RESULTS AS GEOPACKAGE
+gdf.to_file(export_path, layer='damage_points', driver='GPKG')
+#SAVE RESULTS AS SHAPE FILE
+gdf.to_file(export_path)
 
 
